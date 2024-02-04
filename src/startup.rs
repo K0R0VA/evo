@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::entities::{ball, camera, platform};
+use crate::entities::{snake, camera, platform};
 
 pub fn startup(
     mut commands: Commands,
@@ -8,7 +8,7 @@ pub fn startup(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     
-    ball::setup(&mut commands, &mut meshes, &mut materials);
+    snake::setup(&mut commands, &mut meshes, &mut materials);
     platform::setup(&mut commands, &mut meshes, &mut materials);
     camera::setup(&mut commands);
     

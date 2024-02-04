@@ -1,12 +1,12 @@
 use bevy::ecs::{entity::Entity, event::EventReader, query::{With, WorldQuery}, system::Query};
 use bevy_rapier3d::pipeline::CollisionEvent;
 
-use crate::entities::{ball::{Ball, BallCollisionState}, platform::Platform};
+use crate::entities::{snake::{SnakeHead, SnakeCollisionState}, platform::Platform};
 
 
 pub fn collision_events(
     mut collision_events: EventReader<CollisionEvent>,
-    mut ball_query: Query<(&mut BallCollisionState, With<Ball>)>,
+    mut ball_query: Query<(&mut SnakeCollisionState, With<SnakeHead>)>,
     platform_query: Query<(Entity, With<Platform>)>
 ) {
     let events_stream = collision_events

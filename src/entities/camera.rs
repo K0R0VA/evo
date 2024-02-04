@@ -1,5 +1,8 @@
 use bevy::ecs::component::Component;
 use bevy::prelude::*;
+use bevy_rapier3d::dynamics::Velocity;
+
+use super::snake::SnakeHead;
 
 #[derive(Component)]
 pub struct Camera;
@@ -8,24 +11,32 @@ pub struct Camera;
 pub fn setup(
     commands: &mut Commands,
 ) {
-    let now = 0.4_f32;
-    let orbit_scale = 8.0 + now.sin() * 7.0;
     commands.spawn((
         Camera3dBundle {
             transform: Transform::from_xyz(
-                (now / 5.0).cos() * orbit_scale,
-                12.0 - orbit_scale / 2.0,
-                (now / 5.0).sin() * orbit_scale).looking_at(Vec3::ZERO, Vec3::Y),
-                ..Default::default()
-        },
-        FogSettings {
-            color: Color::rgba(0.25, 0.25, 0.25, 1.0),
-            falloff: FogFalloff::Linear {
-                start: 5.0,
-                end: 20.0,
-            },
-            ..default()
+                0.,
+                5.,
+                -5.
+            ).looking_at(Vec3::ZERO, Vec3::Y),
+            ..Default::default()
         },
         Camera
     ));
+}
+
+pub fn look_at_snake(
+    mut camera: Query<(&mut Transform, With<Camera>), Without<SnakeHead>>,
+    snake_position_query: Query<(&Transform, &Velocity, With<SnakeHead>), Without<Camera>>
+) {
+
+    let (mut camera, _) = camera.single_mut();
+    let (snake_position, snake_velocity, _) = snake_position_query.single();
+    if snake_velocity.linvel.length() > 0.5 {
+        let mut velocity = snake_velocity.linvel;
+        velocity.y = 0.;
+        let look_direction = velocity.normalize() * 5.;
+        let translation = snake_position.translation;
+        camera.translation = translation - look_direction + Vec3::Y * 5.;
+        camera.look_at(translation, Vec3::Y);
+    }
 }

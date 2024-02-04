@@ -16,7 +16,7 @@ pub fn setup(
         ..default()
     });
 
-    let i = 1;
+    let i = 10;
     let size = i as f32 / 2.0 + 3.0;
     commands.spawn((
             PbrBundle {
